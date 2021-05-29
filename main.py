@@ -111,7 +111,7 @@ if __name__ == '__main__':
         print_menu()
         opcion = input()
         if opcion == "1":
-            nn = opcion_1(data)
+            nn, entrada_test, salida_test = opcion_1(data)
         elif opcion == "2":
             nn = opcion_2()
         elif opcion == "3":
