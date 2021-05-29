@@ -35,7 +35,14 @@ def pre_proc(data, training_percent):
     # Shuffle data
     for i in range(len(data)):
         np.random.shuffle(data)
+    # Normalize Data
+    # If data contains negative values we would need to subtract the minimum first.
+    data = (data-data.min(axis=0))/ data.ptp(0)
+    # Then we normalize it.
+    data = data / data.max(axis=0)
+    # Finally we divide the data we will use for training the neuronal network and the data we will use for testing it.
     training, test = data[:training_percent,:], data[training_percent:,:]
+
     return training, test
 
 def save_nn(nn, path):
