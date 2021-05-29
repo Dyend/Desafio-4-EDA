@@ -67,42 +67,25 @@ class Network():
     def predict(self, entrada):
         return self.forward(entrada)[-1][1]
 
-    def train(self, entrada, salida, learning_rate):
+    def train(self, entrada, salida, learning_rate, epochs):
 
 
         loss=[]
 
-        for i in range(2000):
-            #Entrenemos la red!
+        # Entrenamos la red i epocas
+        for i in range(epochs):
             out = self.forward(entrada)
             # backward
-            deltas = self.backpropagation(out, salida, learning_rate)
-            pY =  out[-1][1]
+            self.backpropagation(out, salida, learning_rate)
+            predicted =  out[-1][1]
+            if i % 25 == 0: 
+                loss.append(self.loss(predicted, salida))
+        return loss
 
-            if i % 25 ==0: 
-                #print(pY) 
-                loss.append(self.loss(pY, salida))
-                res = 50
-                _x0 = np.linspace(-1.5, 1.5, res)
-                _x1 = np.linspace(-1.5, 1.5, res)
-                
-                _Y = np.zeros((res, res))
-
-                for i0, x0 in enumerate(_x0):
-                    for i1, x1 in enumerate(_x1):
-                        _Y[i0, i1] = self.predict(np.array([[x0, x1]]))[0][0] 
-
-                plt.pcolormesh(_x0, _x1, _Y, cmap="coolwarm")
-                plt.axis("equal")
-                plt.scatter(entrada[salida[:,0]==0, 0] , entrada[salida[:,0]==0, 1], c="skyblue")
-                plt.scatter(entrada[salida[:,0]==1, 0] , entrada[salida[:,0]==1, 1], c="salmon")
-                clear_output(wait=True)
-                plt.show(block=False)
-                plt.pause(0.01)
-                plt.close()
-                plt.plot(range(len(loss)), loss)
-                plt.show(block=False)
-                plt.pause(0.01)
-                plt.close()
-                print(_Y)
-
+    def test(self, entrada, salida):
+        contador = 0
+        for index, d in enumerate(entrada):
+            predicted_value = self.predict(d)
+            if np.rint(predicted_value)[0] == salida[index][0]:
+                contador += 1
+        return contador / len(entrada)

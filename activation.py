@@ -1,10 +1,11 @@
 import numpy as np
+from scipy.special import expit
 
 class Sigmoid:
 
     @staticmethod
     def activation(x):
-        return 1 / (1 + np.e ** (-x))
+        return expit(x)
     @staticmethod
     def activation_derivated(x):
         return x * (1-x)
